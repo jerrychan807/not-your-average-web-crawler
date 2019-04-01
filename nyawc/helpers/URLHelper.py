@@ -24,6 +24,8 @@
 
 from collections import OrderedDict
 
+import tldextract
+
 try: # Python 3
     from urllib.parse import urljoin, urlparse, parse_qsl, urlencode, urlunparse
 except: # Python 2
@@ -155,7 +157,7 @@ class URLHelper:
         if url not in URLHelper.__cache:
             URLHelper.__cache[url] = urlparse(url)
 
-        return ".".join(URLHelper.__cache[url].netloc.split(".")[:-2])
+        return (tldextract.extract(url).subdomain)
 
     @staticmethod
     def get_hostname(url):
@@ -172,12 +174,7 @@ class URLHelper:
         if url not in URLHelper.__cache:
             URLHelper.__cache[url] = urlparse(url)
 
-        parts = URLHelper.__cache[url].netloc.split(".")
-
-        if len(parts) == 1:
-            return parts[0]
-        else:
-            return ".".join(parts[-2:-1])
+        return (tldextract.extract(url).domain)
 
     @staticmethod
     def get_tld(url):
